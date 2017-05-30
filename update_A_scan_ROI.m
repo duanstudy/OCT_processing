@@ -95,13 +95,13 @@ function update_A_scan_ROI(directory, file_list, oct_extension)
                 % and then writing on the text file, so if there are some
                 % weird I/O problems, you will start to get garbage on your
                 % text files.
-                output_cell{file, 1} = file_list{file};
-                output_cell{file, 2} = file_specs.z_min;
-                output_cell{file, 3} = file_specs.z_max;
-                output_cell{file, 4} = file_specs.left_min;
-                output_cell{file, 5} = file_specs.left_max;
-                output_cell{file, 6} = file_specs.right_min;
-                output_cell{file, 7} = file_specs.right_max;
+                output_cell{file, 1} = file_specs.filename{file};
+                output_cell{file, 2} = file_specs.z_min(file);
+                output_cell{file, 3} = file_specs.z_max(file);
+                output_cell{file, 4} = file_specs.left_min(file);
+                output_cell{file, 5} = file_specs.left_max(file);
+                output_cell{file, 6} = file_specs.right_min(file);
+                output_cell{file, 7} = file_specs.right_max(file);
                 
                 % TODO! Check first if there are _ANY_ new files, and then
                 % determine if something needs to be done, as now every
