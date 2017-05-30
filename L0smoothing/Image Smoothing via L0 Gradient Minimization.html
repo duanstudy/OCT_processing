@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0065)http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/main.css" rel="stylesheet" media="all">
+<meta name="description" content="GPU-based Image Smoothing Software">
+<meta name="keywords" content="Mean Filtering, Median Filtering, Gaussian Filtering, Image Smoothing, Photoshop Plug-in, Photoshop, Image processing, robust smoothing software, 
+Image enhancement, Detail enhancement, Image processing software, Imaging, Images, Photography, Photograph, photography Software, photoshop plug-ins, 
+Imaging software, photoshop filters, Contrast manipulation, Image manipulation, Digital imaging, Digital imaging software, Additive smoothing, Butterworth filter,Digital filter,Kalman filter,Kernel smoother,
+Laplacian smoothing, Stretched grid method, Low-pass filter, Recursive filter, Local regression, Smoothing spline, Moving average,Exponential smoothing, Convolution, Curve fitting, Edge preserving smoothing, 
+Numerical smoothing and differentiation, Scale space, Statistical signal processing, Window function,">
+<meta name="msvalidate.01" content="BF499F7308096080ECD26FCFFCEA47FD">
+<meta name="google-site-verification" content="21kKbFxBFeevz2yaI7Nn40dIYxOaLukGDpHBZbzLyt0">
+<title>Image Smoothing via L0 Gradient Minimization</title>
+<style type="text/css">
+.auto-style12 {
+	color: #1F82A9;
+}
+</style>
+<style type="text/css"></style></head>
+
+<body data-pinterest-extension-installed="cr1.38.4">
+<h2 class="auto-style1"><img alt="" class="style4" height="119" src="./Image Smoothing via L0 Gradient Minimization_files/SA2011_white_small.jpg" style="float: left" width="120">Image 
+Smoothing via <em>L</em><sub>0</sub> Gradient Minimization</h2>
+<p class="auto-style7" align="center"><a href="http://appsrv.cse.cuhk.edu.hk/~xuli/">Li Xu</a>&nbsp;&nbsp;&nbsp;&nbsp; Cewu Lu&nbsp;&nbsp;&nbsp;&nbsp; Yi Xu&nbsp;&nbsp;&nbsp;&nbsp; 
+<a href="http://www.cse.cuhk.edu.hk/~leojia/">Jiaya Jia</a></p>
+<p class="auto-style7" align="center">The Chinese Univeristy of Hong Kong</p>
+<p class="auto-style7" align="center">&nbsp;&nbsp;&nbsp; </p>
+<p align="center">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img alt="" src="./Image Smoothing via L0 Gradient Minimization_files/1d.jpg"></p><p align="center">
+<img alt="" src="./Image Smoothing via L0 Gradient Minimization_files/teaser.jpg">
+</p><p class="style2"><strong><span class="auto-style6">Abstract</span></strong></p>
+<p class="auto-style5">We present a new image editing method, particularly 
+effective for sharpening major edges by increasing the steepness of transitions 
+while eliminating a manageable degree of low-amplitude structures. The seemingly 
+contradictive effect is achieved in an unconventional optimization framework 
+making use of <em>L</em><sub>0</sub> gradient minimization, which can globally 
+control how many non-zero gradients are resulted to approximate prominent 
+structures in a structure-sparsity-management manner. Unlike other 
+edge-preserving smoothing approaches, our method does not depend on local 
+features and globally locates important edges. It, as a fundamental tool, finds 
+many applications and is particularly beneficial to edge extraction, clip-art 
+JPEG artifact removal, and non-photorealistic image generation.</p>
+<p class="auto-style5">&nbsp;</p>
+
+
+<p class="auto-style4"><strong>Additional Results</strong></p>
+<ul>
+	<li>
+	<p align="left" class="auto-style5"><a href="http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/ImageSmoothing.htm">Image Smoothing Examples</a></p>
+	</li>
+	<li>
+	<p align="left" class="auto-style5"><a href="http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/EdgeEnhancement.htm">Edge Extraction/Enhancement Examples</a></p>
+	</li>
+	<li>
+	<p align="left" class="auto-style5"><a href="http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/NPR.htm">Non-Photorealistic Rendering Examples</a></p>
+	</li>
+	<li>
+	<p align="left" class="auto-style5"><a href="http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/ClipArt.htm">Clip-Art Compression Artifact Removal Examples</a></p>
+	</li>
+	<li>
+	<p align="left" class="auto-style5"><a href="http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/ToneMapping.htm">Detail Magnification and Tone Mapping Examples</a></p>
+	</li>
+</ul>
+<p align="left">&nbsp;</p>
+
+
+<p class="auto-style4"><strong>Related Projects</strong></p>
+<ul>
+	<li>
+	<p class="auto-style5" align="left" style="font-size:17px">
+	<a href="http://www.cse.cuhk.edu.hk/leojia/projects/l0deblur/index.html"><em>L0</em> Deblurring</a></p>
+	</li>
+	<li>
+	<p class="auto-style5" align="left" style="font-size:17px">
+	<a href="http://www.cse.cuhk.edu.hk/leojia/projects/texturesep/index.html">Relative Total Variation</a></p>
+	</li>
+	<li>
+	<p class="auto-style5" align="left" style="font-size:17px">
+	<a href="http://www.cse.cuhk.edu.hk/leojia/projects/color2gray/index.html">C<span class="auto-style12">ontrast 
+	Preserving Decolorization</span></a></p>
+	</li>
+	<li>
+	<p class="auto-style5" align="left" style="font-size:17px">
+	<a href="http://www.cse.cuhk.edu.hk/leojia/projects/pencilsketch/pencil_drawing.htm">Combining Sketch and Tone for Pencil Drawing Production</a></p>
+	</li>
+</ul>
+<p align="left">&nbsp;</p>
+
+<p class="auto-style4"><strong>Downloads</strong></p>
+
+<table cellspacing="4" cellpadding="2" border="0" style="width: 90%">
+<tbody><tr colspan="2">
+<td align="center" valign="center">
+<img style="padding:0; clear:both; " src="./Image Smoothing via L0 Gradient Minimization_files/paper_thumbnail.jpg" align="middle" alt="Snapshot for paper" class="pdf" border="0" width="170" height="214">
+</td>
+<td align="left" class="auto-style5">
+"Image 
+Smoothing via <em>L</em>0 Gradient Minimization"<br>
+Li Xu, Cewu Lu, Yi Xu, Jiaya Jia <br>
+ACM Transactions on Graphics, Vol. 30, No. 5 (<i>SIGGRAPH Asia 2011</i>), Dec 2011<br>
+<img alt="" height="32" src="./Image Smoothing via L0 Gradient Minimization_files/pdf_icon.gif" width="31">&nbsp;&nbsp;
+[<a href="http://www.cse.cuhk.edu.hk/leojia/papers/L0smooth_Siggraph_Asia2011.pdf">Paper (pdf, 6.5MB)</a>] [<a href="http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/bibtex.html">BibTeX</a>]<br>
+<img alt="" height="36" src="./Image Smoothing via L0 Gradient Minimization_files/matlab.gif" width="36">&nbsp; [<a href="http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/L0smoothing.zip">Matlab Code</a>] 
+<br><img alt="" height="40" src="./Image Smoothing via L0 Gradient Minimization_files/software.gif" width="40"> [<a href="http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/program.htm">GPU 
+Program with User Interface</a>] <br>
+<img alt="" height="36" src="./Image Smoothing via L0 Gradient Minimization_files/ppt.gif" width="35">&nbsp; [<a href="http://www.cse.cuhk.edu.hk/leojia/projects/L0smoothing/L0Smooth.ppt">Presentation 
+Slides</a>] <br>
+</td>
+</tr>
+</tbody></table>
+<br>
+
+<p class="auto-style4"><strong>Video</strong></p>
+<center>
+<iframe width="960" height="720" src="./Image Smoothing via L0 Gradient Minimization_files/jliea54nNFM.html" frameborder="0" allowfullscreen=""></iframe></center>
+
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+
+
+<span style="height: 20px; width: 40px; position: absolute; opacity: 0.85; z-index: 8675309; display: none; cursor: pointer; border: none; top: 1404px; left: 341px; background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAYAAAD/Rn+7AAADU0lEQVR42s2WXUhTYRjHz0VEVPRFUGmtVEaFUZFhHxBhsotCU5JwBWEf1EWEEVHQx4UfFWYkFa2biPJiXbUta33OXFtuUXMzJ4bK3Nqay7m5NeZq6h/tPQ+xU20zugjOxR/+7/O8539+5znnwMtNTExwJtMb3L/fiLv3botCSmUjeCaejTOb39AiFothfHxcFIrHY8RksZjBsckJcOIRMfFsHD/SsbExUYpnI8DR0dGUGjSb0byhEJp5Uqg5CTSzc2CQleJbMEj9/ywBcGRkJEk9DQqouEVQT1sK444yWI9UonmTjGqauVLEIlHa9x8lAMbj8SSpp0rwKGMVvg8P46vbg0C7na8z8JsMcgHe7jlEa+edRhiLy8n/TUMfu6EvLElk+U0WtGwrTrdfAGQf5J8iiK4LVzDU28t8JtMSocf8E+l68myaNFXm/6rXslLK7ay5TOunuRvZWpJuvwAYjUaTpOIWoquuAZ219RTaxKYp9BbjycoN5FvL9qH9TBX5rvoGdJythvXYSTxdtRnWylO/ZdqrLsGwszzhWQ593z2KlAwCYCQSSZJ6ehZ0W7bD9VBLgN0NCqr3qR7R2rBrL3pu3Sb/7nDlz2uy6cG0OXk0GTbZXzNp8trsPAQdTj6frlWzN2DcXZGKQQAMh8NJ6rpyHe+PnkCr/CAFdZyvpfpjuvkifLF9wIt1Wwlo0OHie1RvWrKa93RjzfzliTzPKz3ltB0/Tevmwp14wGUgHAzSOoUEwFAolFaaBSuhnslPRkJexUJtZ6v5HtUeLswl33n1BgEY5fvhs9sJ3FAiT+QYyyvoAQJuD0KBAFRTJNAuz5/s3gJgMBhMJwrVFRThM5tY5zUF/A4X1f2fvQTRLCuBreoim0YmAbqNJryvPEXeeq46kaNdkQ/1HCncbJKPs9ZSv2VHGfWsZ2hfkhKAfr8/pdxWKx4wwD69PmVfNSOL+lr2w+gYqHpWDtXt1xQ8AMlWU0e1lqLd/APRHoP8AJqWrQG9gYxcPMsvSJUvAA4MDKTUJ7MZLaVy8v+qT21tcDx/OemePr0RTkNrur4A6PP5xCgBsL+/X4wiQDpuuVxOeL1eMYmYeDY6sOp0z+B0OuHxeEQhxkJMFosJiSO/UinOI/8Pc+l7KKArAT8AAAAASUVORK5CYII=); background-color: transparent;"></span></body></html>
