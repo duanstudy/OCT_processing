@@ -1,0 +1,3 @@
+filename	 z-min	 z-max	 left_min	 left_max	 right_min	 right_max
+file_1.img	 55	 75	 1	 150	 362	 512
+file_2.img	 55	 75	 1	 150	 362	 512
