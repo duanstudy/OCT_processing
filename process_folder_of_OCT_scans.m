@@ -37,7 +37,7 @@ function process_folder_of_OCT_scans(directory, oct_extension)
         update_A_scan_ROI(directory, file_list, oct_extension)        
         
         % get also the list of A scan coordinates from the text file
-        file_specs = get_file_specs(directory, config.file_listing_txt)        
+        file_specs = get_file_specs(directory, config.file_listing_txt);       
 
         
     %% Process all of the files from the folder
@@ -86,23 +86,29 @@ function process_folder_of_OCT_scans(directory, oct_extension)
                 if strcmp(err.identifier, 'MATLAB:table:UnrecognizedVarName')
                     % for now some reason, the headers are gone and we
                     % cannot reference with the field names?
-                    error('header fields are just as var1 / var2 / var3 / etc., they would need to have actually the variable names')                    
+                    error(['header fields are just as var1 / var2 / var3 / etc.,', ...
+                           'they would need to have actually the variable names', ...
+                           'You probably have error when writing the text file with too many columns, extra tabs or something'])                    
                 else
                     err
                 end
             end
             
             % check the filename for which eye
-            if ~isempty(lower(file_list{file}), 'od')
+            if ~isempty(strfind(lower(file_list{file}), 'od'))
                 disp('OD found from filename, RIGHT EYE')
                 eye = 'right';
-            elseif ~isempty(lower(file_list{file}), 'os')
+            elseif ~isempty(strfind(lower(file_list{file}), 'os'))
                 disp('OS found from filename, LEFT EYE')
                 eye = 'left';
             else
                 warning('OD nor OS was found from the filename so the program now does not know which eye the scan was from, using RIGHT EYE coordinates')
                 eye = 'right';
             end
+            
+            % Algorithm here to override the manually defined coordinates
+            % Placeholder atm
+            coords_ind = find_coords_from_cube(Z, coords_ind, file_specs, eye);
             
             if ~isempty(coords_ind)
                 [Z_crop, A_scan, x, z] = crop_the_cube(Z, coords_ind, file_specs, eye);
@@ -124,7 +130,7 @@ function process_folder_of_OCT_scans(directory, oct_extension)
             % Test to denoise just the single frame and see the diff.
             frame = double(Z(:,:,z));
             
-            % Despeckle, https://doi.org/10.1016/j.cmpb.2014.01.018
+            % Despeckle with a simple algorithm, https://doi.org/10.1016/j.cmpb.2014.01.018
             frame_denoised = DsFlsmv(frame, [3 3], 5);
             
             % L0 Smoothing            
@@ -152,8 +158,7 @@ function process_folder_of_OCT_scans(directory, oct_extension)
                         
             % Write results on disk
             write_ratio_to_disk(peak_1, peak_2, locs_peaks, ratio, peak_1_8bit, peak_2_8bit, ratio_8bit, ...
-                quantization_step, z, x, directory, stripped_filename)
-            
+                quantization_step, z, x, directory, stripped_filename)            
                         
             % OPTIONAL VISUALIZATION
             z_of_interest = z;
@@ -162,6 +167,8 @@ function process_folder_of_OCT_scans(directory, oct_extension)
             
             if visualize_ON == 1 
                 
+                
+                close all
                 scrsz = get(0,'ScreenSize');
                 fig = figure('Color', 'w', 'Name', 'OCT A-Scan');
                     set(fig, 'Position', [0.1*scrsz(3) 0.1*scrsz(4) 0.8*scrsz(3) 0.8*scrsz(4)])
@@ -186,13 +193,16 @@ function process_folder_of_OCT_scans(directory, oct_extension)
                 title('BM4D Denoised'); colorbar
                 subplot(rows,cols,3); imshow(in-denoised, [])
                 title('Noise Residual (In-BM4D)'); colorbar
+                drawnow
                 
                 subplot(rows,cols,4); imshow(frame_denoised, [])
                 title('FrameDenoising'); colorbar; hold on
                 line([x x], [1 size(frame_denoised,1)], 'Color', 'r')
+                drawnow
                 
                 subplot(rows,cols,5); imshow(denoised-frame_denoised, [])
                 title('Noise Residual (BM4D-FrameDenoising)'); colorbar
+                drawnow
                 
                 % A-Scan Comparison
                 subplot(rows,cols,6); hold on
@@ -223,14 +233,13 @@ function process_folder_of_OCT_scans(directory, oct_extension)
                 % mark the peaks
                 p_peaks = plot(locs_peaks(1), peak_1, '^', locs_peaks(2), peak_2, '^');
                 set(p_peaks, 'MarkerFaceColor', 'k')
-                
+                drawnow
                 hold off
                 
                 saveOn = 0;
                 if saveOn == 1
                     filename = strrep(file_list{file}, '.img', '');
                     saveas(fig, fullfile(directory, filename), 'png')
-                    close all
                 end
             end
             
@@ -343,6 +352,11 @@ function process_folder_of_OCT_scans(directory, oct_extension)
         
         % TODO! There is possibly quite a lot of empty space left still on
         % y-axis direction (note! in Matlab the first dimension is y)
+        
+
+    function coords_ind = find_coords_from_cube(Z, coords_ind, file_specs, eye)
+        
+        disp('   Placeholder here if you want to do automated ROI localization from image')
         
        
     function write_ratio_to_disk(peak_1, peak_2, locs_peaks, ratio, peak_1_8bit, peak_2_8bit, ratio_8bit, quantization_step, z, x, directory, stripped_filename)
