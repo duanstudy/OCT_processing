@@ -1,10 +1,12 @@
-function update_A_scan_ROI(directory, oct_extension)
+function update_A_scan_ROI(directory, file_list, oct_extension)
 
     %% HOUSEKEEPING
 
         if nargin == 0
             directory = fullfile('.', 'data');
             oct_extension = 'img'; % TODO! update if you have mixed exts
+            s = dir(fullfile(directory, ['*.', oct_extension]));
+            file_list = {s.name}';            
         end
 
         curr_path = mfilename('fullpath');
@@ -14,42 +16,42 @@ function update_A_scan_ROI(directory, oct_extension)
         
         % shared config for all the files
         config = read_config();
-        
-    %% Get file listing
-    
-        s = dir(fullfile(directory, ['*.', oct_extension]));
-        file_list = {s.name}';
         no_of_files = length(file_list);
-        disp([' - found ', num2str(no_of_files), ' image files'])
+        
         
     %% Create the file listing for disk, and backup if needed
     
         fileOut = fullfile(directory, config.file_listing_txt);
+        file_specs_empty = 0;
     
         % if the text file exists alread
         if exist(fileOut, 'file') == 2
             disp(['The text file "', config.file_listing_txt, '" already exists'])
             
             % make backup
-            % TODO! Add date to destination string, 
+            datestring = datestr(now);
+            datestring = strrep(datestring, ':', '');
+            datestring = strrep(datestring, '-', '');
+            datestring = strrep(datestring, ' ', '');            
+            
             % if you want to keep multiple backups without
             % overwriting
             source = fileOut;
-            destination = [fileOut, '.bak'];
+            destination = [fileOut, '.', datestring, '.bak.txt'];
             [status,message,messageId] = copyfile(source, destination);
+            
+            % check if there are new files
+            file_specs = get_file_specs(directory, config.file_listing_txt);
             
         else
             disp('This is the first time that you create file listing for this folder, correct?')
+            file_specs_empty = 1;
         end
         
-        fid = fopen(fileOut, 'wt');
+       
         
         
     %% Create cell for ouput
-    
-        config.crop_z_window = [55 75];
-        config.crop_left_eye = [0 150];
-        config.crop_right_eye = [362 512];
     
         z_min = config.crop_z_window(1);
         z_max = config.crop_z_window(2);
@@ -60,30 +62,56 @@ function update_A_scan_ROI(directory, oct_extension)
         
         for file = 1 : no_of_files
             
-            output_cell{file, 1} = file_list{file};
-            output_cell{file, 2} = z_min;
-            output_cell{file, 3} = z_max;
-            output_cell{file, 4} = left_min;
-            output_cell{file, 5} = left_max;
-            output_cell{file, 6} = right_min;
-            output_cell{file, 7} = right_max;
+            % the files with custom coordinates already
+            if file_specs_empty == 0
+                try 
+                    coords_ind = check_if_coords(file_list{file}, file_specs.filename);            
+                catch err
+                    if strcmp(err.identifier, 'MATLAB:table:UnrecognizedVarName')
+                        % for now some reason, the headers are gone and we
+                        % cannot reference with the field names?
+                        error('header fields are just as var1 / var2 / var3 / etc., they would need to have actually the variable names')                    
+                    else
+                        err
+                    end
+                end
+            else
+                coords_ind = [];
+            end
+            
+            if isempty(coords_ind)
+                disp(['+ New file = ', file_list{file}, ' detected, initialized with fixed coordinates to: ', config.file_listing_txt])
+                output_cell{file, 1} = file_list{file};
+                output_cell{file, 2} = z_min;
+                output_cell{file, 3} = z_max;
+                output_cell{file, 4} = left_min;
+                output_cell{file, 5} = left_max;
+                output_cell{file, 6} = right_min;
+                output_cell{file, 7} = right_max;
+                
+            else
+                disp(['| Not changing the coordinate values for ', file_list{file}])
+                % Strictly speaking we are reading the contents of the file
+                % and then writing on the text file, so if there are some
+                % weird I/O problems, you will start to get garbage on your
+                % text files.
+                output_cell{file, 1} = file_list{file};
+                output_cell{file, 2} = file_specs.z_min;
+                output_cell{file, 3} = file_specs.z_max;
+                output_cell{file, 4} = file_specs.left_min;
+                output_cell{file, 5} = file_specs.left_max;
+                output_cell{file, 6} = file_specs.right_min;
+                output_cell{file, 7} = file_specs.right_max;
+                
+                % TODO! Check first if there are _ANY_ new files, and then
+                % determine if something needs to be done, as now every
+                % time some files values are written
+                
+            end
             
         end
         
     %% Write to disk
 
-        fprintf(fid, '%s\t%s\t%s\t%s\t%s\t%s\t%s\n', 'filename','z-min','z-max', ...
-                                     'left_min','left_max','right_min','right_max');  % header        
-                                 
-        for i = 1:size(output_cell,1)
-            fprintf(fid,'%s\t %d\t %d\t %d\t %d\t %d\t %d\t %d \n', output_cell{i,1},output_cell{i,2},output_cell{i,3},...
-                                      output_cell{i,4},output_cell{i,5},output_cell{i,6},...
-                                      output_cell{i,7});
-        end
-        fclose(fid);
-        
-        % TODO! Make a loop without the hard-coded indices
-        
-        
-        
+        write_coords_to_disk(fileOut, output_cell)
       

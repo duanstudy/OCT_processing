@@ -15,13 +15,14 @@ function process_folder_of_OCT_scans(directory, oct_extension)
         cd(curr_dir)
                     
         % add folders to Matlab path so that their functions are found
-        addpath(fullfile('.', 'BM4D'))
-        addpath(fullfile('.', 'utils'))
-        addpath(fullfile('.', 'L0smoothing'))
-        addpath(fullfile('.', 'matlabsoftware-2013', 'ImageQualityFeatures'))
-        addpath(fullfile('.', 'matlabsoftware-2013', 'DespeckleFilters'))
+        addpath(fullfile(curr_dir, 'BM4D'))
+        addpath(fullfile(curr_dir, 'utils'))
+        addpath(fullfile(curr_dir, 'L0smoothing'))
+        addpath(fullfile(curr_dir, 'matlabsoftware-2013', 'ImageQualityFeatures'))
+        addpath(fullfile(curr_dir, 'matlabsoftware-2013', 'DespeckleFilters'))
         
         config = read_config();
+                
     
     %% Get file listing
     
@@ -30,11 +31,14 @@ function process_folder_of_OCT_scans(directory, oct_extension)
         no_of_files = length(file_list);
         disp([' - found ', num2str(no_of_files), ' image files'])
         
-        % get also the list of A scan coordinates from the text file
-        formatSpec = '%s %d %d %d %d %d %d';
-        file_specs = readtable(fullfile(directory, config.file_listing_txt),...
-                               'Delimiter','\t', 'Format',formatSpec);
+        % check if there are new files added to the folder since last run
+        % that have missing custom coordinates from the
+        % "config.file_listing_txt"
+        update_A_scan_ROI(directory, file_list, oct_extension)        
         
+        % get also the list of A scan coordinates from the text file
+        file_specs = get_file_specs(directory, config.file_listing_txt)        
+
         
     %% Process all of the files from the folder
     
@@ -76,7 +80,17 @@ function process_folder_of_OCT_scans(directory, oct_extension)
             
             % The faster part that extracts A-scans based on your desired
             % coordinates
-            coords_ind = check_if_coords(file_list{file}, file_specs.filename);
+            try
+                coords_ind = check_if_coords(file_list{file}, file_specs.filename);
+            catch err                
+                if strcmp(err.identifier, 'MATLAB:table:UnrecognizedVarName')
+                    % for now some reason, the headers are gone and we
+                    % cannot reference with the field names?
+                    error('header fields are just as var1 / var2 / var3 / etc., they would need to have actually the variable names')                    
+                else
+                    err
+                end
+            end
             eye = 'right';
             if ~isempty(coords_ind)
                 [Z_crop, A_scan, x, z] = crop_the_cube(Z, coords_ind, file_specs, eye);
@@ -333,10 +347,7 @@ function process_folder_of_OCT_scans(directory, oct_extension)
         
         fclose(fid);
         
-    function coords_ind = check_if_coords(filename, list_of_filenames_with_coords)
-        
-        IndexC = strfind(list_of_filenames_with_coords, filename);
-        coords_ind = find(not(cellfun('isempty', IndexC)));
+
         
     function save_in_parfor_loop(Z, filename)
         
