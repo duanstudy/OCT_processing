@@ -91,7 +91,19 @@ function process_folder_of_OCT_scans(directory, oct_extension)
                     err
                 end
             end
-            eye = 'right';
+            
+            % check the filename for which eye
+            if ~isempty(lower(file_list{file}), 'od')
+                disp('OD found from filename, RIGHT EYE')
+                eye = 'right';
+            elseif ~isempty(lower(file_list{file}), 'os')
+                disp('OS found from filename, LEFT EYE')
+                eye = 'left';
+            else
+                warning('OD nor OS was found from the filename so the program now does not know which eye the scan was from, using RIGHT EYE coordinates')
+                eye = 'right';
+            end
+            
             if ~isempty(coords_ind)
                 [Z_crop, A_scan, x, z] = crop_the_cube(Z, coords_ind, file_specs, eye);
             else
@@ -146,6 +158,8 @@ function process_folder_of_OCT_scans(directory, oct_extension)
             % OPTIONAL VISUALIZATION
             z_of_interest = z;
             visualize_ON = 1;
+            
+            
             if visualize_ON == 1 
                 
                 scrsz = get(0,'ScreenSize');
