@@ -20,6 +20,6 @@ The same with CLAHE in ImageJ/FIJI with a maximum slope of 2 to enhance the cont
 
 ### Error case
 
-When you pick improper A-scan, the canonical 2-peak characteristic is missing and when the denoised signal for peak finding is not smooth enough, the [https://uk.mathworks.com/help/signal/ref/findpeaks.html](Matlab findpeaks) just finds two peaks very close to each other:
+When you pick improper A-scan, the canonical 2-peak characteristic is missing and when the denoised signal for peak finding is not smooth enough, the [Matlab findpeaks](https://uk.mathworks.com/help/signal/ref/findpeaks.html) just finds two peaks very close to each other:
 
 ![Error case](https://github.com/petteriTeikari/OCT_processing/blob/master/imgs/comparison_BM4D_matlab_peakFailure.png "Logo Title Text 1")
