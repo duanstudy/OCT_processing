@@ -1,0 +1,2 @@
+filename	 peak_1	 peak_2	 ratio_BM4D	 peak_1_8bit	 peak_2_8bit	 ratio_8bit	 quantization_step	 z_AScan	 x_AScan 
+file_1	 9.869712e-01	 9.728788e-01	 9.857216e-01	 138	 141	 1.021739e+00	 3.906250e-03	 75	 437	 
