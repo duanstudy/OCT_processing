@@ -10,7 +10,7 @@
 
 ## Sample processing results
 
-Processing pipeline with the raw 8-bit .img Zeiss OCT input, followed by BM4D Denoising. (2nd row) Despeckling with L0 Smoothing which is used for more robust peak finding, while the actual peak value is read from the BM4D Denoised cube (well frame in our case)
+Processing pipeline with the raw 8-bit .img Zeiss OCT input, followed by BM4D Denoising in LOG domain (OCT noise is multiplicative). (2nd row) Despeckling with L0 Smoothing which is used for more robust peak finding, while the actual peak value is read from the BM4D Denoised cube (well frame in our case)
 
 ![Processing](https://github.com/petteriTeikari/OCT_processing/blob/master/imgs/comparison_BM4D_matlab.png "Logo Title Text 1")
 
