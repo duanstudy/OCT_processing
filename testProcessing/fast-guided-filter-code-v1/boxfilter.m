@@ -7,9 +7,8 @@ function imDst = boxfilter(imSrc, r)
 %   - Equivalent to the function: colfilt(imSrc, [2*r+1, 2*r+1], 'sliding', @sum);
 %   - But much faster.
 
-[hei, wid] = size(imSrc)
+[hei, wid] = size(imSrc);
 imDst = zeros(size(imSrc));
-r
 
 %cumulative sum over Y axis
 imCum = cumsum(imSrc, 1);
