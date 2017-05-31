@@ -1,4 +1,9 @@
-function plot_Filtering(im, filtered, titleStr, inputStr)
+function plot_Filtering(im, filtered, titleStr, inputStr, without_target, scaling_8bit)
+
+    if nargin == 5
+        % No Python-style keyword arguments :(
+        scaling_8bit = 1;
+    end
 
     fig = figure('Name', titleStr, 'Color', 'w');
                 
@@ -12,19 +17,24 @@ function plot_Filtering(im, filtered, titleStr, inputStr)
     for i = 1 : length(filtered)
 
         % normalize images
-        im = norm_image_for_display(im);
-        filtered{i}.data = norm_image_for_display(filtered{i}.data);
+        im = norm_image_for_display(im, scaling_8bit);
+        filtered{i}.data = norm_image_for_display(filtered{i}.data, scaling_8bit);
+        
+        % compute metrics
+        E_im = compute_entropy(im, scaling_8bit);
+        E_filt = compute_entropy(filtered{i}.data, scaling_8bit);
         
             % Input
             sp(i) = subplot(rows,cols,i);
             p(i,1) = imshow(im, []);
-                tit(i,1) = title(inputStr);
+                tit(i,1) = title([inputStr, ', E = ', num2str(E_im, 2), ' bits']);
                 colorbar
                 
             % Filtered
             sp(i+cols) = subplot(rows,cols,i+cols);
             p(i,2) = imshow(filtered{i}.data, []);
-                titlestring = sprintf('%s\n%s', filtered{i}.name, filtered{i}.param);
+                titlestring = sprintf('%s\n%s', filtered{i}.name, ...
+                    ['E = ', num2str(E_filt, 2), ' bits']);
                 tit(i,2) = title(titlestring);
                 lab(i) = xlabel(['t = ', num2str(filtered{i}.timing, 2), ' s']);
                 colorbar
@@ -41,8 +51,24 @@ function plot_Filtering(im, filtered, titleStr, inputStr)
     set(lab, 'FontSize', 7)
     
 % SUBFUNCTIONS
-function im = norm_image_for_display(im)
 
-    im = double(im);
-    im = im - min(im(:));
-    im = im / max(im(:));
+    
+function E = compute_entropy(I, scaling_8bit)
+
+    % If you want to compute sample entropy, or approximate entropy
+    % you need to add additiona code here
+
+    if scaling_8bit == 1
+        max_value = 255;
+    else
+        max_value = 1;
+    end
+
+    % Assume I in the range 0..max_value
+    no_of_bins = 256;
+    p = hist(I(:), linspace(0, max_value, no_of_bins));  % create histogram
+    p(p==0) = []; % remove zero entries that would cause log2 to return NaN
+    p = p/numel(I); % normalize histogram to unity
+    E = -sum(p.*log2(p)); % entropy definition
+
+    

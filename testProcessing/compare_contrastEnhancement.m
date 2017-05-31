@@ -22,3 +22,4 @@ function contrast = compare_contrastEnhancement(im)
     contrast{ind}.timing = toc;
     contrast{ind}.param = [clipLimit];
     
+    imwrite(contrast{ind}.data,[contrast{ind}.name, '.jpg'],'Quality',100)

@@ -12,19 +12,62 @@ function test_postprocessing()
         cd(curr_dir)
                     
         % add folders to Matlab path so that their functions are found
-        addpath(fullfile(curr_dir, '..', 'utils'))
+        
         addpath(fullfile(curr_dir, 'fast-guided-filter-code-v1'))
         addpath(fullfile(curr_dir, 'BM3D'))
+        addpath(fullfile(curr_dir, 'coherenceFilterToolbox'))
+        addpath(fullfile(curr_dir, 'FAST_NLM'))
+        addpath(fullfile(curr_dir, 'RobustBilateralFilter'))
+        addpath(fullfile(curr_dir, 'trilateralFilter'))
+        
         addpath(fullfile(curr_dir, '..', 'BM4D'))        
         addpath(fullfile(curr_dir, '..', 'L0smoothing'))
+        addpath(fullfile(curr_dir, '..', 'utils'))
         
     %% INPUT
 
-        load('testFrame.mat');
-        % easier variable names
-        raw = testFrame_raw;
-        im = testFrame_BM4D;
-        clear('testFrame_BM4D', 'testFrame_BM4D')        
+        % Now we have two types of test cases:
+        
+        % 1) Where the ground truth / noiseless image is not known,
+        %    which is the case typically when you acquire images without
+        %    massive averaging and multiframe reconstruction
+        
+        % 2) Target is provided from averaging allowing us to quantify
+        %    the quality of the denoising. The averaged image is provided
+        %    as part of the paper by Lyuan Fan et al. (2016)
+        %    Leyuan Fang, Shutao Li, David Cunefare and Sina Farsiu, 
+        %   "Segmentation Based Sparse Reconstruction of Optical Coherence Tomography Images" 
+        %   IEEE Transactions on Medical Imaging, https://doi.org/10.1109/TMI.2016.2611503
+        %   https://sites.google.com/site/leyuanfang/
+        
+        without_target = 0;
+        process_subwindow = 0; % speeds up the computations
+        zoom_in = 0; % TODO for display
+        
+        if without_target == 1    
+            load('testFrame.mat');       
+            raw = testFrame_raw;
+            im = testFrame_BM4D;
+            clear('testFrame_BM4D', 'testFrame_BM4D')        
+            
+        else
+            load('testFrame_with_target.mat');
+            raw = test;
+            im = average;
+            clear('test', 'average')     
+            
+        end
+        
+        y1 = 121; y2 = 320;
+        x1 = 335; x2 = 534;
+        
+        if process_subwindow == 1
+            
+            % note the matrix notation, y is before x
+            raw = raw(y1:y2, x1:x2);
+            im = im(y1:y2, x1:x2);
+        end
+            
     
     %% DENOISING    
         
@@ -34,32 +77,32 @@ function test_postprocessing()
         % Plot
         titleStr = ('Denoising');
         inputStr = ('Raw');
-        plot_Filtering(raw, denoised, titleStr, inputStr)
+        plot_Filtering(raw, denoised, titleStr, inputStr, without_target)
         
     
     %% EDGE-AWARE SMOOTHING
     
         % Process with different filters
-        denoised_im = denoised{1}.data;
-        smoothed = compare_edgeAwareSmoothing(denoised_im);
+        desired_input_name_EAR = 'BM3D Cascaded Residual'; % picking the desired input from previous block
+        [desired_ind, desired_input_name_EAR] = find_index_for_name(denoised, desired_input_name_EAR);
+        smoothed = compare_edgeAwareSmoothing(denoised{desired_ind}.data);
         
         % Plot
-        titleStr = ('Edge-Aware Smoothing');
-        inputStr = ('BM3D');
-        plot_Filtering(im, smoothed, titleStr, inputStr)
+        titleStr = 'Edge-Aware Smoothing';
+        inputStr = desired_input_name_EAR;
+        plot_Filtering(denoised{desired_ind}.data, smoothed, titleStr, inputStr, without_target)
 
     %% CONTRAST ENHANCEMENT    
     
         % Process with different filters
-        % TODO! Do a selector with the name that gives you the correct
-        % index
-        final_smoothed = smoothed{2}.data;
-        contrast = compare_contrastEnhancement(final_smoothed);
+        desired_input_name_contrast = 'L0 Gradient Smoothing'; % picking the desired input from previous block
+        [desired_ind, desired_input_name_contrast] = find_index_for_name(smoothed, desired_input_name_contrast);        
+        contrast = compare_contrastEnhancement(smoothed{desired_ind}.data);
         
         % Plot
-        titleStr = ('Contrast Enhancement');
-        inputStr = ('Guided + L0');
-        plot_Filtering(final_smoothed, contrast, titleStr, inputStr)
+        titleStr = 'Contrast Enhancement';
+        inputStr = [desired_input_name_EAR, '+', desired_input_name_contrast];
+        plot_Filtering(smoothed{desired_ind}.data, contrast, titleStr, inputStr, without_target)
      
     %% (Cascaded) Edge-Aware Smoothing
     
@@ -70,7 +113,7 @@ function test_postprocessing()
         clahe = contrast{1}.data;
         smoothed_clahe = compare_edgeAwareSmoothing(clahe);
         
-        titleStr = ('Cascaded Edge-Aware Smoothing');
-        inputStr = ('CLAHE');
-        plot_Filtering(clahe, smoothed_clahe, titleStr, inputStr)
+        titleStr = 'Cascaded Edge-Aware Smoothing';
+        inputStr = 'CLAHE';
+        plot_Filtering(clahe, smoothed_clahe, titleStr, inputStr, without_target)
         
