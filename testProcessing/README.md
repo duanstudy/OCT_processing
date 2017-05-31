@@ -10,9 +10,13 @@ Run `test_postprocessing.m`
 
 ![alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/denoising_comparison.png)
 
+_By denoising the residual of the first BM3D and adding the remaining details to the result of the 1st pass, we can have sharper edges with this "ghetto fix"_
+
 ## Edge-Aware Smoothing
 
 ![alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/edgeawaresmoothing_comparison.png)
+
+**NOTE!** The scaling is different, even though guided filter seems quite extreme, that is quite low-amplitude noise in the end
 
 ## Contrast Enhancement
 
