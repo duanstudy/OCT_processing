@@ -20,4 +20,6 @@ function [imLog10_S_Lin, imLog10_S, imLog10, imScaled] = enhance_logSmooothingFi
              
     % Convert back to Linear
     imLog10_S_Lin = 10 .^ imLog10_S;
+    
+    imLog10_S_Lin = imLog10_S_Lin - min(imLog10_S_Lin(:));
     imLog10_S_Lin = imLog10_S_Lin / max(imLog10_S_Lin(:));
