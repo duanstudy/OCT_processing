@@ -130,6 +130,13 @@ function process_folder_of_OCT_scans(directory, oct_extension)
             % Test to denoise just the single frame and see the diff.
             frame = double(Z(:,:,z));
             
+            % Save as a test frame for quick testing
+            %{
+            testFrame_raw = double(im(76:775,:,z));
+            testFrame_BM4D = frame(76:775,:);
+            save(fullfile('.', 'data', 'testFrame.mat'), 'testFrame_raw', 'testFrame_BM4D')
+            %}
+            
             % Despeckle with a simple algorithm, https://doi.org/10.1016/j.cmpb.2014.01.018
             frame_denoised = DsFlsmv(frame, [3 3], 5);
             
