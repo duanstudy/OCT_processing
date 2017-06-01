@@ -42,7 +42,7 @@ function test_postprocessing()
         
         without_target = 0;
         process_subwindow = 0; % speeds up the computations
-        zoom_in = 0; % TODO for display
+        % zoom_in = 0; % TODO for display
         
         if without_target == 1    
             load('testFrame.mat');       
@@ -68,6 +68,7 @@ function test_postprocessing()
             % note the matrix notation, y is before x
             raw = raw(y1:y2, x1:x2);
             im = im(y1:y2, x1:x2);
+            target = target(y1:y2, x1:x2);
         end
             
     
@@ -81,18 +82,32 @@ function test_postprocessing()
         inputStr = ('Raw');
         plot_Filtering(raw, denoised, titleStr, inputStr, without_target, target)
         
+        
+    %% DECOMPOSITION
+    
+        [base_ind, base_name] = find_index_for_name(denoised, 'BM3D');
+        [final_ind, final_name] = find_index_for_name(denoised, 'BM3D Cascaded Residual + L0');
+        decomp_filt = decompose_OCT(raw, denoised{base_ind}.data, denoised{final_ind}.data);
+        
+        % Plot
+        titleStr = ('Decomposition Filtering');
+        inputStr = ('Base CLAHE');
+        [decomp_ind, decomp_name] = find_index_for_name(denoised, 'Base CLAHE');
+        
+        plot_Filtering(denoised{final_ind}.data, decomp_filt, titleStr, inputStr, without_target, target)
+        
     
     %% EDGE-AWARE SMOOTHING
     
         % Process with different filters
-        desired_input_name_EAR = 'BM3D Cascaded Residual + L0'; % picking the desired input from previous block
-        [desired_ind, desired_input_name_EAR] = find_index_for_name(denoised, desired_input_name_EAR);
-        smoothed = compare_edgeAwareSmoothing(denoised{desired_ind}.data, 'denoised');
+        desired_input_name_EAR = 'Base CLAHE'; % picking the desired input from previous block
+        [desired_ind, desired_input_name_EAR] = find_index_for_name(decomp_filt, desired_input_name_EAR);
+        smoothed = compare_edgeAwareSmoothing(decomp_filt{desired_ind}.data, 'denoised');
         
         % Plot
         titleStr = 'Edge-Aware Smoothing';
         inputStr = desired_input_name_EAR;
-        plot_Filtering(denoised{desired_ind}.data, smoothed, titleStr, inputStr, without_target, target)
+        plot_Filtering(decomp_filt{desired_ind}.data, smoothed, titleStr, inputStr, without_target, target)
 
     %% CONTRAST ENHANCEMENT    
     
