@@ -46,7 +46,7 @@ The zoomed blowout of the same
 
 ### Smoothing for Decomposition input
 
-[alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/edgeawaresmoothing_comparison_from_decomp.png)
+![alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/edgeawaresmoothing_comparison_from_decomp.png)
 
 ## Contrast Enhancement
 
