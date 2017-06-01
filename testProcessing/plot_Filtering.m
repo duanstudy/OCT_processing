@@ -1,6 +1,6 @@
-function plot_Filtering(im, filtered, titleStr, inputStr, without_target, scaling_8bit)
+function plot_Filtering(im, filtered, titleStr, inputStr, without_target, target, scaling_8bit)
 
-    if nargin == 5
+    if nargin == 6
         % No Python-style keyword arguments :(
         scaling_8bit = 1;
     end
@@ -24,6 +24,18 @@ function plot_Filtering(im, filtered, titleStr, inputStr, without_target, scalin
         E_im = compute_entropy(im, scaling_8bit);
         E_filt = compute_entropy(filtered{i}.data, scaling_8bit);
         
+        if without_target  == 0
+            peakVal = 255;
+            [mse, snr, psnr, mssim] = compute_imageQuality(target, filtered{i}.data, peakVal);
+            titlestring = sprintf('%s\n%s\n%s', filtered{i}.name, ...
+                                  ['E = ', num2str(E_filt, 2), ' bits'], ...
+                                  ['PSNR = ', num2str(psnr, 4), ', MSSIM = ', num2str(mssim, 2)]);
+            
+        else
+             titlestring = sprintf('%s\n%s', filtered{i}.name, ...
+                                  ['E = ', num2str(E_filt, 2), ' bits']);
+        end
+        
             % Input
             sp(i) = subplot(rows,cols,i);
             p(i,1) = imshow(im, []);
@@ -32,9 +44,7 @@ function plot_Filtering(im, filtered, titleStr, inputStr, without_target, scalin
                 
             % Filtered
             sp(i+cols) = subplot(rows,cols,i+cols);
-            p(i,2) = imshow(filtered{i}.data, []);
-                titlestring = sprintf('%s\n%s', filtered{i}.name, ...
-                    ['E = ', num2str(E_filt, 2), ' bits']);
+            p(i,2) = imshow(filtered{i}.data, []);               
                 tit(i,2) = title(titlestring);
                 lab(i) = xlabel(['t = ', num2str(filtered{i}.timing, 2), ' s']);
                 colorbar

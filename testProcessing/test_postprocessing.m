@@ -48,13 +48,15 @@ function test_postprocessing()
             load('testFrame.mat');       
             raw = testFrame_raw;
             im = testFrame_BM4D;
-            clear('testFrame_BM4D', 'testFrame_BM4D')        
+            clear('testFrame_BM4D', 'testFrame_BM4D')      
+            target = [];
             
         else
             load('testFrame_with_target.mat');
             raw = test;
             im = average;
             clear('test', 'average')     
+            target = im;
             
         end
         
@@ -77,20 +79,20 @@ function test_postprocessing()
         % Plot
         titleStr = ('Denoising');
         inputStr = ('Raw');
-        plot_Filtering(raw, denoised, titleStr, inputStr, without_target)
+        plot_Filtering(raw, denoised, titleStr, inputStr, without_target, target)
         
     
     %% EDGE-AWARE SMOOTHING
     
         % Process with different filters
-        desired_input_name_EAR = 'BM3D Cascaded Residual'; % picking the desired input from previous block
+        desired_input_name_EAR = 'BM3D Cascaded Residual + L0'; % picking the desired input from previous block
         [desired_ind, desired_input_name_EAR] = find_index_for_name(denoised, desired_input_name_EAR);
-        smoothed = compare_edgeAwareSmoothing(denoised{desired_ind}.data);
+        smoothed = compare_edgeAwareSmoothing(denoised{desired_ind}.data, 'denoised');
         
         % Plot
         titleStr = 'Edge-Aware Smoothing';
         inputStr = desired_input_name_EAR;
-        plot_Filtering(denoised{desired_ind}.data, smoothed, titleStr, inputStr, without_target)
+        plot_Filtering(denoised{desired_ind}.data, smoothed, titleStr, inputStr, without_target, target)
 
     %% CONTRAST ENHANCEMENT    
     
@@ -102,7 +104,7 @@ function test_postprocessing()
         % Plot
         titleStr = 'Contrast Enhancement';
         inputStr = [desired_input_name_EAR, '+', desired_input_name_contrast];
-        plot_Filtering(smoothed{desired_ind}.data, contrast, titleStr, inputStr, without_target)
+        plot_Filtering(smoothed{desired_ind}.data, contrast, titleStr, inputStr, without_target, target)
      
     %% (Cascaded) Edge-Aware Smoothing
     
@@ -111,9 +113,9 @@ function test_postprocessing()
         % be good for developing a intuition for this
         
         clahe = contrast{1}.data;
-        smoothed_clahe = compare_edgeAwareSmoothing(clahe);
+        smoothed_clahe = compare_edgeAwareSmoothing(clahe, 'clahe');
         
         titleStr = 'Cascaded Edge-Aware Smoothing';
         inputStr = 'CLAHE';
-        plot_Filtering(clahe, smoothed_clahe, titleStr, inputStr, without_target)
+        plot_Filtering(clahe, smoothed_clahe, titleStr, inputStr, without_target, target)
         

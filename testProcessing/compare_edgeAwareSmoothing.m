@@ -1,6 +1,6 @@
-function smoothed = compare_edgeAwareSmoothing(im, compute_with_slow_filters)    
+function smoothed = compare_edgeAwareSmoothing(im, title_string, compute_with_slow_filters)    
     
-    if nargin == 1
+    if nargin == 2
         compute_with_slow_filters = 0;
     end
     ind = 0;
@@ -32,7 +32,7 @@ function smoothed = compare_edgeAwareSmoothing(im, compute_with_slow_filters)
         smoothed{ind}.timing = toc;
         smoothed{ind}.param = [epsilon; win_size];
         
-        imwrite(smoothed{ind}.data,[smoothed{ind}.name, '.jpg'],'Quality',100)
+        imwrite(smoothed{ind}.data,[title_string, '_', smoothed{ind}.name, '.jpg'],'Quality',100)
 
     
     %% L0 Gradient Smoothing
@@ -49,7 +49,7 @@ function smoothed = compare_edgeAwareSmoothing(im, compute_with_slow_filters)
         smoothed{ind}.timing = toc;
         smoothed{ind}.param = [logOffset; lambdaS];
         
-        imwrite(smoothed{ind}.data,[smoothed{ind}.name, '.jpg'],'Quality',100)
+        imwrite(smoothed{ind}.data,[title_string, '_', smoothed{ind}.name, '.jpg'],'Quality',100)
  
     %% Bilateral Filter
     
@@ -75,7 +75,7 @@ function smoothed = compare_edgeAwareSmoothing(im, compute_with_slow_filters)
         smoothed{ind}.timing = toc;
         smoothed{ind}.param = [sigmaNoise sigmaS sigmaR1 sigmaR2 tol];
         
-        imwrite(smoothed{ind}.data,[smoothed{ind}.name, '.jpg'],'Quality',100)
+        imwrite(smoothed{ind}.data,[title_string, '_', smoothed{ind}.name, '.jpg'],'Quality',100)
 
     
     %% Anisotropic Diffusion

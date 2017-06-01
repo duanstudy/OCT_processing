@@ -34,8 +34,7 @@ function denoised = compare_denoising(im)
              
         epsilon = 0.9;
         sigma = 25;
-        iter = 1; % keeps iterating on the residual
-        denoised{ind}.data = BM3D_cascaded_log_wrapper(im_prev_step, residual, epsilon, sigma, iter);
+        denoised{ind}.data = BM3D_cascaded_log_wrapper(im_prev_step, residual, epsilon, sigma);
         
         % Motivation for this "ghetto fix" was that the initial denoising
         % pass might denoise too much and take some of the edges that can
@@ -46,36 +45,24 @@ function denoised = compare_denoising(im)
         denoised{ind}.param = [epsilon; sigma];
         
         imwrite(denoised{ind}.data,[denoised{ind}.name, '.jpg'],'Quality',100)
+        
 
-        
-        
-    %% POISSON NL-MEANS
+    %% Residual cleaning with L0
     
-        % You could transform the image first with inverse Anscombe to
-        % "Poisson" and then back with Anscombe transform?
-    
-        %{
+        load('temp.mat')
+        
         ind = ind+1;
-        denoised{ind}.name = 'Poisson NL-Means';
-        hW = 10; % def. 10 in code, 21 in the paper
-        hB = 3; % def. 3 in code, 7 in the paper
-        hK = 6; % def. 6 in code, 13 in the paper
-
-        Q = max(max(im)) / 20;  % reducing factor of underlying luminosity
-        ima_lambda = im / Q;
-        ima_lambda(ima_lambda == 0) = min(min(ima_lambda(ima_lambda > 0)));
-
-        tol = 0.01/mean2(Q); % stopping criteria |CSURE(i) - CSURE(i-1)| < tol
-        maxIter = 40;
-
-        tic;
-        ima_lambda_ma = diskconvolution(ima_lambda, hK);
-        denoised{ind}.data = poisson_nlmeans_PT(ima_lambda, ...
-                                                 ima_lambda_ma, ...
-                                                 hW, hB, ...
-                                                 tol, maxIter);
-                                             % maxIter added by PT
+        denoised{ind}.name = 'BM3D Cascaded Residual + L0';
+        im_prev_step = denoised{ind-1}.data;
+        scaling_8bit = 0;
+        residual = im - norm_image_for_display(im_prev_step, scaling_8bit);
+        
+        epsilon = 0.9;
+        sigma = 25;
+        iter = 2; % keeps iterating on the residual
+        denoised{ind}.data = residual_L0_log_wrapper(im_prev_step, residual, iter);
         denoised{ind}.timing = toc;
-        denoised{ind}.param = [hW hB hK Q tol maxIter];
-        %}
-    
+        denoised{ind}.param = [epsilon; sigma];
+        
+        imwrite(denoised{ind}.data,[denoised{ind}.name, '.jpg'],'Quality',100)
+        
