@@ -30,13 +30,13 @@ And for the raw noisy input
 
 ### File size
 
-When getting rid of high-spatial frequencies for DCT transform used by JPEG format, the filesizes come down considerably when using the highest quality `100` in Matlab:
+When getting rid of high-spatial frequencies for [DCT transform](https://users.cs.cf.ac.uk/Dave.Marshall/Multimedia/node231.html) used by JPEG format, the filesizes come down considerably when using the highest quality `100` in Matlab:
 
 ![alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/filesize_comparison.png)
 
-_From raw input of 299.1 kB, we get to 96.5 kB with BM3D cascaded residual, and then from there either 81.7 kB with bilateral filter, 84.7 kB for guided filter, and 77.1 kB with L0 gradient smoothing. So roughly to **25%** of the original size!_
+_From raw input of 299.1 kB, we get to 120.7 kB with "BM3D cascaded residual + L0", and then from there either 83.2 kB with bilateral filter, 102.5 kB for guided filter, and 94.2 kB with L0 gradient smoothing. So roughly to **31%** of the original size!_
 
-Even if you look at the edge-aware smoothing results and seemingly minimal results of guided filtering for already denoised image, the guided filter put the filesize to 87% of the original size. And depending on the algorithm, this might be useful or not.
+Even if you look at the edge-aware smoothing results and seemingly minimal results of guided filtering for already denoised image, the guided filter put the filesize to 85% of the original size (102.5kB/120.7kB). And depending on the algorithm, this might be useful or not.
 
 Visually for clinician evaluation obviously this does not have much of an effect.
 
