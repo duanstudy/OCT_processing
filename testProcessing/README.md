@@ -10,7 +10,7 @@ Run `test_postprocessing.m`
 
 ![alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/denoising_comparison.png)
 
-_By denoising the residual of the first BM3D and adding the remaining details to the result of the 1st pass, we can have sharper edges with this "ghetto fix" (2nd Column). And for the 3rd column we have taken the residual of 2nd column, and smoothed the residual with L0 gradient smoothing and added that back to 2nd column giving more details to the final image._
+_By denoising the residual of the first BM3D and adding the remaining details to the result of the 1st pass, we can have sharper edges with this "ghetto fix" (2nd Column). And for the 3rd column we have taken the residual of 2nd column, and smoothed the residual with L0 gradient smoothing and added that back to 2nd column **giving more details to the final image**._
 
 See zoomed version of the same filtering:
 
@@ -62,6 +62,8 @@ And for the raw noisy input, the output becomes total garbage due to high noise:
 
 ![alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/clahe_filtered_from_decomp.png)
 
+At this point we start to get "over-filtering" already
+
 ### File size
 
 When getting rid of high-spatial frequencies for [DCT transform](https://users.cs.cf.ac.uk/Dave.Marshall/Multimedia/node231.html) used by JPEG format, the filesizes come down considerably when using the highest quality `100` in Matlab:
@@ -72,7 +74,13 @@ _From raw input of 299.1 kB, we get to 120.7 kB with "BM3D cascaded residual + L
 
 Even if you look at the edge-aware smoothing results and seemingly minimal results of guided filtering for already denoised image, the guided filter put the filesize to 85% of the original size (102.5kB/120.7kB). And depending on the algorithm, this might be useful or not.
 
-Visually for clinician evaluation obviously this does not have much of an effect.
+## Summary
+
+For clinicians naïve to image analysis, many of the steps might seem pointless, and they don't add much to visual evaluation of the OCT scans. Depending on the image analysis and compression, this small amplitude and high-frequency noise might have an effect.
+
+Also, the combinations of different hand-crafted filters and their parameters becomes very large and doing this 'more-or-less' manually for a large volume of OCT cubes is not the most feasible approach.
+
+### Machine learning and compression
 
 For more on machine learning and compression, I recommend the following excellent review:
 
