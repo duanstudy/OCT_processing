@@ -48,8 +48,6 @@ function denoised = compare_denoising(im)
         
 
     %% Residual cleaning with L0
-    
-        load('temp.mat')
         
         ind = ind+1;
         denoised{ind}.name = 'BM3D Cascaded Residual + L0';
