@@ -44,15 +44,23 @@ The zoomed blowout of the same
 
 **NOTE!** The scaling is different, even though guided filter seems quite extreme, that is quite low-amplitude noise in the end
 
+### Smoothing for Decomposition input
+
+[alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/edgeawaresmoothing_comparison_from_decomp.png)
+
 ## Contrast Enhancement
 
 For filtered CLAHE:
 
 ![alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/clahe_filtered.png)
 
-And for the raw noisy input
+And for the raw noisy input, the output becomes total garbage due to high noise:
 
 ![alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/clahe_raw.png)
+
+### CLAHE for the smoothed decomposition
+
+![alt text](https://github.com/petteriTeikari/OCT_processing/blob/master/testProcessing/images_output/clahe_filtered_from_decomp.png)
 
 ### File size
 
